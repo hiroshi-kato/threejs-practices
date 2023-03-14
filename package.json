@@ -17,6 +17,9 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "the-new-css-reset": "^1.8.4",
+    "typescript": "4.9.5",
+    "lil-gui": "^0.17.0",
+    "three": "^0.148.0"
   }
 }
