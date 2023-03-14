@@ -8,7 +8,7 @@ export default function Home() {
       <ul className={styles.list}>
         {/* /textへのリンクを作成 */}
         <li>
-          <Link href='/text' prefetch={false}>
+          <Link href='/3d-text' prefetch={false}>
             3D-Text
           </Link>
         </li>

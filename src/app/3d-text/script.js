@@ -8,7 +8,13 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
  * Base
  */
 // Debug
-const gui = new dat.GUI()
+const urlParams = new URLSearchParams(window.location.search)
+const debugObject = {}
+let gui;
+if (urlParams.has('debug')) {
+  debugObject.width = 400
+  gui = new dat.GUI(debugObject)
+}
 
 // Canvas
 const canvas = document.querySelector('canvas#webgl')
@@ -43,21 +49,33 @@ fontLoader.load(
     const text = new THREE.Mesh(textGeometry, material)
     scene.add(text)
 
+    // donutとtextの当たり判定
+    const donutHitText = (donut) => {
+      const donutBox = new THREE.Box3().setFromObject(donut)
+      const textBox = new THREE.Box3().setFromObject(text)
+      return donutBox.intersectsBox(textBox)
+    }
+
+    // donutの当たり判定がtrueになるまで再帰
+    const donutRandomPosition = (donut) => {
+      donut.position.x = (Math.random() - 0.5) * 10
+      donut.position.y = (Math.random() - 0.5) * 10
+      donut.position.z = (Math.random() - 0.5) * 10
+      donut.rotation.x = Math.random() * Math.PI
+      donut.rotation.y = Math.random() * Math.PI
+      const scale = Math.random()
+      donut.scale.set(scale, scale, scale)
+      if (donutHitText(donut)) {
+        return donutRandomPosition(donut)
+      }
+    }
+
     // ドーナツオブジェクトを100個追加
     const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
     for (let i = 0; i < 100; i++) {
       const donut = new THREE.Mesh(donutGeometry, material)
       scene.add(donut)
-      // position
-      donut.position.x = (Math.random() - 0.5) * 10
-      donut.position.y = (Math.random() - 0.5) * 10
-      donut.position.z = (Math.random() - 0.5) * 10
-      // rotation
-      donut.rotation.x = Math.random() * Math.PI
-      donut.rotation.y = Math.random() * Math.PI
-      //scale
-      const scale = Math.random()
-      donut.scale.set(scale, scale, scale)
+      donutRandomPosition(donut)
     }
   }
 )
